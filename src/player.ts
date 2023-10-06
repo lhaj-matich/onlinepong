@@ -18,7 +18,6 @@ export default class Player {
     }
 
     draw(context: any) {
-        console.log(this.id);
         context.fillStyle = this.color;
         context.fillRect(this.x, this.y, this.width, this.height);
 

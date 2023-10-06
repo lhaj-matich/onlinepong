@@ -1,8 +1,8 @@
 export default class Ball {
-    private x: number;
-    private y: number;
-    private radius: number;
-    private color: string;
+    public x: number;
+    public y: number;
+    public radius: number;
+    public color: string | "transparent";
 
     constructor(x: number, y: number, radius: number, color: string) {
         this.x = x;
