@@ -1,9 +1,11 @@
-import { Avatar, Box, Button, HStack, Heading, Image, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Box, Button, HStack, Heading, Image, Link, Text, VStack } from "@chakra-ui/react";
 import axios from "axios";
 import image from "./assets/logo.png";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { io } from "socket.io-client";
+import { useNavigate } from "react-router-dom";
+import useGame from "./hooks/useGame";
 
 interface NavBarProps {
     user: any;
@@ -28,7 +30,7 @@ const NavBar = ({ user }: NavBarProps) => {
     );
 };
 
-const MatchMade = ({user, opponent}: MatchMade) => {
+const MatchMade = ({ user, opponent }: MatchMade) => {
     return (
         <HStack backgroundColor="#1D222C" padding={10} borderRadius={12}>
             <VStack width="150px">
@@ -37,7 +39,9 @@ const MatchMade = ({user, opponent}: MatchMade) => {
                     You
                 </Heading>
             </VStack>
-            <Heading fontSize="50px" color="#dc585b">VS</Heading>
+            <Heading fontSize="50px" color="#dc585b">
+                VS
+            </Heading>
             <VStack width="150px">
                 <Avatar src={opponent.avatar} />
                 <Heading fontSize="24px" color="#d9d9d9">
@@ -49,15 +53,45 @@ const MatchMade = ({user, opponent}: MatchMade) => {
 };
 
 const Home = () => {
+    const navigate = useNavigate();
     const [user, setUser] = useState({});
     const [message, setMessage] = useState("");
     const [visible, setVisible] = useState(true);
     const [matchMade, setMatch] = useState(null);
-    const socket = io("http://localhost:3000/game", {
+    const { setGameSettings } = useGame();
+    const socket = io("http://127.0.0.1:3000/game", {
         transports: ["websocket"],
         auth: {
             token: "Bearer " + Cookies.get("jwt"),
         },
+    });
+
+    socket.on("onGoingMatch", () => {
+        setMessage("You cannot join the queue you already in game session");
+        setVisible(false);
+    });
+
+    socket.on("joinedGameQueue", () => {
+        setMessage("Waiting for other players...");
+        setVisible(false);
+    });
+
+    socket.on("noPlayersAvailable", () => {
+        setMessage("No players are available to player, try again later.");
+        setTimeout(() => {
+            setMessage("");
+            setVisible(true);
+        }, 3000);
+    });
+
+    socket.on("matchMade", ({ data }) => {
+        console.log(data);
+        setMessage("");
+        setMatch(data);
+        setGameSettings({ gameID: data.session, playerID: data.id });
+        setTimeout(() => {
+            navigate("/game");
+        }, 3000);
     });
 
     useEffect(() => {
@@ -67,22 +101,6 @@ const Home = () => {
                 setVisible(false);
             }
         });
-
-        socket.on("onGoingMatch", () => {
-            setMessage("You cannot join the queue you already in game session");
-            setVisible(false);
-        });
-
-        socket.on("joinedGameQueue", () => {
-            console.log("Joined");
-            setMessage("Waiting for other players");
-            setVisible(false);
-        });
-
-        socket.on("matchMade", (data) => {
-            console.log(data);
-            setMatch(data);
-        })
 
         axios
             .get("http://127.0.0.1:3000/users/me", { withCredentials: true })
@@ -118,11 +136,19 @@ const Home = () => {
                     {message}
                 </Text>
                 {visible && (
-                    <Button fontSize="32px" padding="20px 30px" onClick={handleJoinQueue}>
-                        Join Queue
-                    </Button>
+                    <Link
+                        fontSize="32px"
+                        backgroundColor="#dc585b"
+                        _hover={{ textStyle: "none", filter: "brightness(80%)" }}
+                        color="#d9d9d9"
+                        borderRadius={12}
+                        padding="10px 30px"
+                        onClick={handleJoinQueue}
+                    >
+                        Join Game
+                    </Link>
                 )}
-                { matchMade && <MatchMade user={user} opponent={matchMade} />}
+                {matchMade && <MatchMade user={user} opponent={matchMade} />}
             </Box>
         </Box>
     );

@@ -5,20 +5,20 @@ const GameHeader = () => (
         <HStack justifyContent="flex-start">
             <Avatar
                 src="https://cdn.intra.42.fr/users/711486184927ed4435f940616622740e/yait-iaz.jpg"
-                border="3px solid #DC585B"
+                border="1px solid #D9D9D9"
             />
-            <Heading fontSize={20} color="#DC585B">
+            <Heading fontSize={20} color="#D9D9D9">
                 You
             </Heading>
         </HStack>
         <HStack>
             <Avatar
                 src="https://cdn.intra.42.fr/users/3b86420766f725922024d5ace6c6e5be/ochoumou.jpg"
-                border="3px solid #D9D9D9"
+                border="1px solid #D9D9D9"
             />
             <VStack>
                 <Heading fontSize={20} color="#D9D9D9">
-                    Ochoumou
+                    ochoumou
                 </Heading>
             </VStack>
         </HStack>

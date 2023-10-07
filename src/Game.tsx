@@ -4,13 +4,14 @@ import Ball from "./ball";
 import Player from "./player";
 import GameHeader from "./GameHeader";
 import { Box } from "@chakra-ui/react";
+import useGame from "./hooks/useGame";
 
 export interface Game {
     playerOne: Player;
     playerTwo: Player;
     ball: Ball;
-    roomID: String;
-    playerNo: Number;
+    gameID: String;
+    playerID: Number;
     isGameStarted: Boolean;
 }
 
@@ -22,13 +23,16 @@ const Game = () => {
     const ref = useRef(null);
     const [state, setState] = useState("");
     const [visible, setVisible] = useState(true);
+    const { gameSettings } = useGame();
+
+    console.log(gameSettings);
     const [game] = useState<Game>({
         playerOne: new Player(0, 200, 20, 100, "transparent", 1),
         playerTwo: new Player(780, 200, 20, 100, "transparent", 2),
         ball: new Ball(400, 245, 10, "transparent"),
         isGameStarted: false,
-        playerNo: 0,
-        roomID: "",
+        playerID: 0,
+        gameID: "",
     });
 
     const paint = (context: any) => {
@@ -62,7 +66,7 @@ const Game = () => {
         });
 
         socket.on("playerNo", (newPlayerNo) => {
-            game.playerNo = newPlayerNo;
+            game.playerID = newPlayerNo;
         });
 
         socket.on("startingGame", () => {
@@ -71,7 +75,7 @@ const Game = () => {
 
         socket.on("startedGame", (room) => {
             setState("");
-            game.roomID = room.id;
+            game.gameID = room.id;
 
             game.playerOne = new Player(0, 200, 20, 100, "#DC585B", 1);
             game.playerTwo = new Player(780, 200, 20, 100, "#D9D9D9", 2);
@@ -86,14 +90,14 @@ const Game = () => {
                 if (game.isGameStarted) {
                     if (e.key === "ArrowUp") {
                         socket.emit("move", {
-                            roomID: game.roomID,
-                            playerNo: game.playerNo,
+                            roomID: game.gameID,
+                            playerNo: game.playerID,
                             direction: "up",
                         });
                     } else if (e.key === "ArrowDown") {
                         socket.emit("move", {
-                            roomID: game.roomID,
-                            playerNo: game.playerNo,
+                            roomID: game.gameID,
+                            playerNo: game.playerID,
                             direction: "down",
                         });
                     }
@@ -105,7 +109,7 @@ const Game = () => {
         socket.on("endGame", (room) => {
             clearCanvas(context);
             game.isGameStarted = false;
-            if (game.playerNo === room.winner) {
+            if (game.playerID === room.winner) {
                 return setState("Congrats. You won this game");
             }
             setState("You lost this game");
@@ -129,7 +133,7 @@ const Game = () => {
             return setState("Error connecting to the game server please refresh...");
         }
         socket.emit("join");
-        setState("Waiting for other players to join...");
+        setState("Waiting for other player to join...");
         setVisible(false);
     };
 
@@ -149,6 +153,6 @@ const Game = () => {
             </div>
         </>
     );
-}
+};
 
-export default Game
+export default Game;
