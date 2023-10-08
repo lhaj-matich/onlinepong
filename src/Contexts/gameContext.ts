@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 export type Game = {
-    playerID: Number | null;
+    playerID: number;
     gameID: String | null;
     me?: any | null;
     opponent?: any | null;

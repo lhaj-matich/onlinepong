@@ -6,7 +6,7 @@ interface BoardProps {
 }
 
 const GameProvider = ({ children }: BoardProps) => {
-    const [game, setGameSettings] = useState<Game>({ playerID: null, gameID: null });
+    const [game, setGameSettings] = useState<Game>({ playerID: 0, gameID: null });
     return <GameContext.Provider value={{ gameSettings: game, setGameSettings }}>{children}</GameContext.Provider>;
 };
 

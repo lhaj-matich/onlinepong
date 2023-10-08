@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, HStack, Heading, Image, Link, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Box, HStack, Heading, Image, Link, Text, VStack } from "@chakra-ui/react";
 import axios from "axios";
 import image from "./assets/logo.png";
 import { useEffect, useState } from "react";
@@ -79,7 +79,6 @@ const Home = () => {
     });
 
     socket.on("userLeftGame", () => {
-        
         setVisible(false);
         setMessage("Other player has left the game");
         setTimeout(() => {
