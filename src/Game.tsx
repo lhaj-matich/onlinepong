@@ -3,8 +3,10 @@ import { io } from "socket.io-client";
 import Ball from "./ball";
 import Player from "./player";
 import GameHeader from "./GameHeader";
+import Cookies from "js-cookie";
 import { Box } from "@chakra-ui/react";
 import useGame from "./hooks/useGame";
+import { useNavigate } from "react-router-dom";
 
 export interface Game {
     playerOne: Player;
@@ -15,16 +17,20 @@ export interface Game {
     isGameStarted: Boolean;
 }
 
-const socket = io("http://localhost:3000", {
+const socket = io("http://127.0.0.1:3000/game", {
     transports: ["websocket"],
+    autoConnect: false,
+    auth: {
+        token: "Bearer " + Cookies.get("jwt"),
+    },
 });
 
 const Game = () => {
     const ref = useRef(null);
+    const navigate = useNavigate();
     const [state, setState] = useState("");
     const [visible, setVisible] = useState(true);
     const { gameSettings } = useGame();
-
     console.log(gameSettings);
     const [game] = useState<Game>({
         playerOne: new Player(0, 200, 20, 100, "transparent", 1),
@@ -56,8 +62,9 @@ const Game = () => {
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         console.log("clearing screen");
     };
-
+    
     useEffect(() => {
+        if (!gameSettings.playerID || !gameSettings.gameID) navigate("/");
         const canvas: any = ref.current;
         const context = canvas.getContext("2d");
 
@@ -71,6 +78,15 @@ const Game = () => {
 
         socket.on("startingGame", () => {
             setState("The game is about to start...");
+        });
+
+        socket.on("hello", () => {
+            console.log("User leftgame");
+            setVisible(false);
+            setState("Other player has left the game");
+            setTimeout(() => {
+                navigate("/");
+            }, 3000);
         });
 
         socket.on("startedGame", (room) => {
@@ -147,7 +163,7 @@ const Game = () => {
             <p id="messageArea">{state}</p>
             <div id="body">
                 <Box backgroundColor="#1D222C" padding="2rem" borderRadius={12}>
-                    <GameHeader />
+                    <GameHeader user={gameSettings.me} opponent={gameSettings.opponent} />
                     <canvas id="gameFrame" width={800} height={500} ref={ref} />
                 </Box>
             </div>

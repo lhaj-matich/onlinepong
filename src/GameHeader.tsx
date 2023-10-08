@@ -1,28 +1,31 @@
 import { HStack, Heading, Avatar, VStack } from "@chakra-ui/react";
 
-const GameHeader = () => (
-    <HStack justifyContent="space-between" width="800px" marginBottom={5}>
-        <HStack justifyContent="flex-start">
-            <Avatar
-                src="https://cdn.intra.42.fr/users/711486184927ed4435f940616622740e/yait-iaz.jpg"
-                border="1px solid #D9D9D9"
-            />
-            <Heading fontSize={20} color="#D9D9D9">
-                You
-            </Heading>
-        </HStack>
-        <HStack>
-            <Avatar
-                src="https://cdn.intra.42.fr/users/3b86420766f725922024d5ace6c6e5be/ochoumou.jpg"
-                border="1px solid #D9D9D9"
-            />
-            <VStack>
+interface GameHeaderProps {
+    user: any;
+    opponent: any;
+}
+
+const GameHeader = ({ user, opponent }: GameHeaderProps) => {
+    if (!user || !opponent)
+        return null;
+    return (
+        <HStack justifyContent="space-between" width="800px" marginBottom={5}>
+            <HStack justifyContent="flex-start">
+                {user.avatar && <Avatar src={user.avatar || ""} border="1px solid #D9D9D9" />}
                 <Heading fontSize={20} color="#D9D9D9">
-                    ochoumou
+                    You
                 </Heading>
-            </VStack>
+            </HStack>
+            <HStack>
+                {opponent.avatar && <Avatar src={opponent.avatar || ""} border="1px solid #D9D9D9" />}
+                <VStack>
+                    <Heading fontSize={20} color="#D9D9D9">
+                        {(opponent.username && opponent.username) || ""}
+                    </Heading>
+                </VStack>
+            </HStack>
         </HStack>
-    </HStack>
-);
+    );
+};
 
 export default GameHeader;

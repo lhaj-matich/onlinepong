@@ -54,7 +54,7 @@ const MatchMade = ({ user, opponent }: MatchMade) => {
 
 const Home = () => {
     const navigate = useNavigate();
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState<any>({});
     const [message, setMessage] = useState("");
     const [visible, setVisible] = useState(true);
     const [matchMade, setMatch] = useState(null);
@@ -88,7 +88,12 @@ const Home = () => {
         console.log(data);
         setMessage("");
         setMatch(data);
-        setGameSettings({ gameID: data.session, playerID: data.id });
+        setGameSettings({
+            gameID: data.session,
+            playerID: data.playerID,
+            me: { username: user.username, avatar: user.avatar },
+            opponent: { username: data.username, avatar: data.avatar },
+        });
         setTimeout(() => {
             navigate("/game");
         }, 3000);
@@ -114,6 +119,7 @@ const Home = () => {
 
     const handleJoinQueue = () => {
         if (!socket.connected) {
+            setVisible(false);
             return setMessage("Error connecting to the game server please refresh...");
         }
         setVisible(false);

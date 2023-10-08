@@ -3,6 +3,8 @@ import { createContext } from "react";
 export type Game = {
     playerID: number | null;
     gameID: string | null;
+    me?: any | null;
+    opponent?: any | null;
 };
 
 type DispatchGame = React.Dispatch<React.SetStateAction<Game>>;
