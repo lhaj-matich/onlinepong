@@ -18,7 +18,11 @@ export default class Player {
     }
 
     draw(context: any) {
+        // context.fillStyle = this.color;
+        // context.fillRect(this.x, this.y, this.width, this.height);
         context.fillStyle = this.color;
-        context.fillRect(this.x, this.y, this.width, this.height);
+        context.beginPath();
+        context.roundRect(this.x, this.y, this.width, this.height, [20]);
+        context.fill();
     }
 }

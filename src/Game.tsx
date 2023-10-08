@@ -112,12 +112,12 @@ const Game = () => {
         });
 
         socket.on("endGame", (room) => {
-            clearCanvas(context);
+            // clearCanvas(context);
             game.isGameStarted = false;
-            if (game.playerID === room.winner) {
-                return setMessage("Congrats. You won this game");
-            }
-            setMessage("You lost this game");
+            // if (game.playerID === room.winner) {
+            //     return setMessage("Congrats. You won this game");
+            // }
+            // setMessage("You lost this game");
         });
 
         socket.on("updateGame", (room) => {

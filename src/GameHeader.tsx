@@ -16,7 +16,7 @@ const GameHeader = ({ user, opponent, playerID }: GameHeaderProps) => {
             <HStack justifyContent="flex-start">
                 {user.avatar && <Avatar src={user.avatar || ""} border="1px solid #D9D9D9" />}
                <VStack alignItems="flex-start" gap={1} width="120px">
-               <Heading fontSize={20} color={playerID === 1 ? "#DC585B" : "#D9D9D9" }>
+               <Heading fontSize={18} color={playerID === 1 ? "#DC585B" : "#D9D9D9" }>
                     You
                 </Heading>
                 <HStack>
@@ -29,7 +29,7 @@ const GameHeader = ({ user, opponent, playerID }: GameHeaderProps) => {
             <HStack>
                 {opponent.avatar && <Avatar src={opponent.avatar || ""} border="1px solid #D9D9D9" />}
                 <VStack alignItems="flex-start" gap={1} width="120px">
-                    <Heading fontSize={20} color={playerID === 2 ? "#DC585B" : "#D9D9D9" }>
+                    <Heading fontSize={18} color={playerID === 2 ? "#DC585B" : "#D9D9D9" }>
                         {(opponent.username && opponent.username) || ""}
                     </Heading>
                     <HStack>
