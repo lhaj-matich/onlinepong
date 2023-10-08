@@ -20,8 +20,5 @@ export default class Player {
     draw(context: any) {
         context.fillStyle = this.color;
         context.fillRect(this.x, this.y, this.width, this.height);
-
-        context.font = "38px Arial";
-        context.fillText(this.score, this.x < 400 ? 360 - (this.score.toString().length - 1) * 12 : 420, 40);
     }
 }

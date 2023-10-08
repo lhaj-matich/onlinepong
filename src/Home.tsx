@@ -2,8 +2,7 @@ import { Avatar, Box, Button, HStack, Heading, Image, Link, Text, VStack } from 
 import axios from "axios";
 import image from "./assets/logo.png";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { io } from "socket.io-client";
+import socket from './socket';
 import { useNavigate } from "react-router-dom";
 import useGame from "./hooks/useGame";
 
@@ -59,12 +58,7 @@ const Home = () => {
     const [visible, setVisible] = useState(true);
     const [matchMade, setMatch] = useState(null);
     const { setGameSettings } = useGame();
-    const socket = io("http://127.0.0.1:3000/game", {
-        transports: ["websocket"],
-        auth: {
-            token: "Bearer " + Cookies.get("jwt"),
-        },
-    });
+
 
     socket.on("onGoingMatch", () => {
         setMessage("You cannot join the queue you already in game session");
@@ -78,6 +72,16 @@ const Home = () => {
 
     socket.on("noPlayersAvailable", () => {
         setMessage("No players are available to player, try again later.");
+        setTimeout(() => {
+            setMessage("");
+            setVisible(true);
+        }, 3000);
+    });
+
+    socket.on("userLeftGame", () => {
+        
+        setVisible(false);
+        setMessage("Other player has left the game");
         setTimeout(() => {
             setMessage("");
             setVisible(true);
