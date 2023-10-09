@@ -8,8 +8,6 @@ interface GameHeaderProps {
     playerID: number;
 }
 
-/// #DC585B
-
 const GameHeader = ({ score, user, opponent, playerID }: GameHeaderProps) => {
     if (!user || !opponent) return null;
     return (

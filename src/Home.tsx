@@ -71,7 +71,7 @@ const Home = () => {
     });
 
     socket.on("noPlayersAvailable", () => {
-        setMessage("No players are available to player, try again later.");
+        setMessage("No players are available for the moment, try again later.");
         setTimeout(() => {
             setMessage("");
             setVisible(true);

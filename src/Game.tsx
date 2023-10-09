@@ -62,14 +62,6 @@ const Game = () => {
             if (!socket.connected) setMessage("Error connecting the the server");
         });
 
-        // socket.on("playerNo", (newPlayerNo) => {
-        //     game.playerID = newPlayerNo;
-        // });
-
-        // socket.on("startingGame", () => {
-        //     setMessage("The game is about to start...");
-        // });
-
         socket.on("userLeftGame", () => {
             game.isGameStarted = false;
             clearCanvas(context);
@@ -83,9 +75,8 @@ const Game = () => {
             setScore(data);
         })
 
-        socket.on("startGameSession", (gameData) => {
+        socket.on("startGameSession", () => {
             setMessage("");
-            game.gameID = gameData.id;
 
             game.playerOne = new Player(0, 200, 20, 100, "#DC585B", 1);
             game.playerTwo = new Player(780, 200, 20, 100, "#D9D9D9", 2);
@@ -96,16 +87,16 @@ const Game = () => {
             window.addEventListener("keydown", (e) => {
                 if (game.isGameStarted) {
                     if (e.key === "ArrowUp") {
-                        socket.emit("move", {
-                            roomID: game.gameID,
-                            playerNo: game.playerID,
-                            direction: "up",
+                        socket.emit("gameMovePlayer", {
+                            gameSession: game.gameID,
+                            player: game.playerID,
+                            key: "up",
                         });
                     } else if (e.key === "ArrowDown") {
-                        socket.emit("move", {
-                            roomID: game.gameID,
-                            playerNo: game.playerID,
-                            direction: "down",
+                        socket.emit("gameMovePlayer", {
+                            gameSession: game.gameID,
+                            player: game.playerID,
+                            key: "down",
                         });
                     }
                 }
@@ -114,12 +105,12 @@ const Game = () => {
         });
 
         socket.on("endGame", (room) => {
-            // clearCanvas(context);
+            clearCanvas(context);
             game.isGameStarted = false;
-            // if (game.playerID === room.winner) {
-            //     return setMessage("Congrats. You won this game");
-            // }
-            // setMessage("You lost this game");
+            if (game.playerID === room.winner) {
+                return setMessage("Congrats. You won this game");
+            }
+            setMessage("Bitch. You lost this game");
         });
 
         socket.on("updateGame", (room) => {
