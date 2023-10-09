@@ -23,7 +23,7 @@ const GameHeader = ({ score, user, opponent, playerID }: GameHeaderProps) => {
                     <Heading fontSize={18} color={playerID === 1 ? "#DC585B" : "#D9D9D9"}>
                         You
                     </Heading>
-                    <HStack gap={1} height="26px" width="110px" backgroundColor="#252932" borderRadius={12}>
+                    <HStack gap={1} height="26px" minWidth="110px" backgroundColor="#252932" borderRadius={12}>
                         {score["1"] && score["2"] && score[playerID].map((scoreItem: string, index: number) => (
                             <Icon
                                 key={index}
@@ -41,7 +41,7 @@ const GameHeader = ({ score, user, opponent, playerID }: GameHeaderProps) => {
                     <Heading fontSize={18} color={playerID === 2 ? "#DC585B" : "#D9D9D9"}>
                         {(opponent.username && opponent.username) || ""}
                     </Heading>
-                    <HStack gap={1} height="26px" width="110px" backgroundColor="#252932" borderRadius={12}>
+                    <HStack gap={1} height="26px" minWidth="110px" backgroundColor="#252932" borderRadius={12}>
                         {score["1"] && score["2"] && score[playerID === 1 ? playerID + 1 : playerID - 1].map((scoreItem: string, index: number) => (
                             <Icon
                                 key={index}

@@ -105,6 +105,7 @@ const Game = () => {
         });
 
         socket.on("endGame", (room) => {
+            console.log(room);
             clearCanvas(context);
             game.isGameStarted = false;
             if (game.playerID === room.winner) {
